@@ -1,0 +1,108 @@
+
+<h2 class="sr-only">GitHub Pages URL Generator for Megapixels and HFA resources</h2>
+
+<style>
+  .org-btn {
+    flex: 1; padding: 10px 14px; font-size: 14px; font-weight: 500;
+    border-radius: 10px; cursor: pointer; border: 2px solid transparent;
+    color: #fff; transition: opacity 0.15s;
+  }
+  .org-btn:hover { opacity: 0.88; }
+  .org-btn.mp  { background: #E8186D; }
+  .org-btn.hfa { background: #3AAFA9; }
+  .org-btn.inactive { background: var(--color-background-secondary); color: var(--color-text-secondary); border: 2px solid var(--color-border-tertiary); }
+  #result-block { display:none; border-radius: 12px; border: 0.5px solid var(--color-border-tertiary); padding: 1rem 1.25rem; margin-top: 1.5rem; background: var(--color-background-secondary); }
+  #copy-btn, #open-btn { font-size: 13px; padding: 6px 14px; cursor: pointer; border-radius: 8px; }
+</style>
+
+<div style="padding: 1.5rem 0;">
+
+  <div style="display: flex; gap: 10px; margin-bottom: 1.5rem;">
+    <button id="btn-mp"  class="org-btn mp  inactive" onclick="setOrg('megapixels')">🎨 Megapixels</button>
+    <button id="btn-hfa" class="org-btn hfa inactive" onclick="setOrg('hfa')">📚 HFA</button>
+  </div>
+
+  <div style="margin-bottom: 1rem;">
+    <label style="font-size: 13px; color: var(--color-text-secondary); display: block; margin-bottom: 6px;">Filename <span style="opacity:0.6">(with or without .html)</span></label>
+    <input type="text" id="filename" placeholder="e.g. vendor-guide" oninput="buildURL()" style="width:100%; box-sizing:border-box; font-size:14px;" />
+  </div>
+
+  <div style="margin-bottom: 1rem;">
+    <label style="font-size: 13px; color: var(--color-text-secondary); display: block; margin-bottom: 6px;">Subfolder <span style="opacity:0.6">(optional)</span></label>
+    <input type="text" id="subfolder" placeholder="e.g. guides" oninput="buildURL()" style="width:100%; box-sizing:border-box; font-size:14px;" />
+  </div>
+
+  <div id="result-block">
+    <p style="font-size: 12px; color: var(--color-text-secondary); margin: 0 0 6px;">Generated URL</p>
+    <p id="url-display" style="font-family: var(--font-mono); font-size: 13px; color: var(--color-text-primary); margin: 0 0 12px; word-break: break-all;"></p>
+    <div style="display:flex; gap:8px;">
+      <button id="copy-btn" onclick="copyURL()"><i class="ti ti-copy" aria-hidden="true"></i> Copy</button>
+      <button id="open-btn" onclick="openURL()"><i class="ti ti-external-link" aria-hidden="true"></i> Open</button>
+    </div>
+  </div>
+
+  <p id="no-org-msg" style="font-size:13px; color:var(--color-text-secondary); margin-top:1rem; display:none;">← Select a site first</p>
+</div>
+
+<script>
+const ORGS = {
+  megapixels: { base: 'https://hfateam.github.io/Megapixels-Resources', accent: '#E8186D' },
+  hfa:        { base: 'https://hfateam.github.io/HFA-Resources',        accent: '#3AAFA9' }
+};
+let selectedOrg = null;
+
+function setOrg(org) {
+  selectedOrg = org;
+  const mp  = document.getElementById('btn-mp');
+  const hfa = document.getElementById('btn-hfa');
+  mp.className  = 'org-btn mp'  + (org === 'megapixels' ? '' : ' inactive');
+  hfa.className = 'org-btn hfa' + (org === 'hfa'        ? '' : ' inactive');
+  styleResultBlock();
+  buildURL();
+}
+
+function styleResultBlock() {
+  const rb = document.getElementById('result-block');
+  const accent = selectedOrg ? ORGS[selectedOrg].accent : 'var(--color-border-tertiary)';
+  rb.style.borderColor = accent;
+  rb.style.borderWidth = '1.5px';
+  const copyBtn = document.getElementById('copy-btn');
+  const openBtn = document.getElementById('open-btn');
+  [copyBtn, openBtn].forEach(b => {
+    b.style.borderColor = accent;
+    b.style.color = accent;
+  });
+}
+
+function buildURL() {
+  const filename = document.getElementById('filename').value.trim();
+  const subfolder = document.getElementById('subfolder').value.trim();
+  const resultBlock = document.getElementById('result-block');
+  const noOrg = document.getElementById('no-org-msg');
+
+  if (!filename) { resultBlock.style.display = 'none'; noOrg.style.display = 'none'; return; }
+  if (!selectedOrg) { resultBlock.style.display = 'none'; noOrg.style.display = 'block'; return; }
+
+  noOrg.style.display = 'none';
+  const fn = filename.endsWith('.html') ? filename : filename + '.html';
+  const base = ORGS[selectedOrg].base;
+  const path = subfolder ? `/${subfolder.replace(/^\/|\/$/g, '')}/${fn}` : `/${fn}`;
+  document.getElementById('url-display').textContent = base + path;
+  resultBlock.style.display = 'block';
+  styleResultBlock();
+  document.getElementById('copy-btn').innerHTML = '<i class="ti ti-copy" aria-hidden="true"></i> Copy';
+}
+
+function copyURL() {
+  const url = document.getElementById('url-display').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.innerHTML = '<i class="ti ti-check" aria-hidden="true"></i> Copied!';
+    setTimeout(() => { btn.innerHTML = '<i class="ti ti-copy" aria-hidden="true"></i> Copy'; }, 2000);
+  });
+}
+
+function openURL() {
+  openLink(document.getElementById('url-display').textContent);
+}
+</script>
