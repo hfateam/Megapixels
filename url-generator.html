@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>URL Generator · Megapixels & HFA</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --mp: #E8186D;
+    --mp-light: #fce8f2;
+    --mp-mid: #f7b8d6;
+    --hfa: #2B9E98;
+    --hfa-light: #e2f5f4;
+    --hfa-mid: #9fd9d6;
+    --neutral: #f4f3f0;
+    --surface: #ffffff;
+    --text: #1a1a1a;
+    --text-muted: #888;
+    --border: #e8e6e1;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--neutral);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .card {
+    background: var(--surface);
+    border-radius: 24px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+  }
+
+  .header {
+    margin-bottom: 2rem;
+  }
+
+  .header p {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .toggle-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+
+  .toggle-btn {
+    padding: 14px 10px;
+    border-radius: var(--radius);
+    border: 2px solid var(--border);
+    background: var(--neutral);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: all 0.18s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .toggle-btn .btn-label { font-size: 15px; font-weight: 600; }
+  .toggle-btn .btn-url   { font-family: 'DM Mono', monospace; font-size: 10px; opacity: 0.7; }
+
+  .toggle-btn:hover { border-color: #ccc; color: var(--text); }
+
+  .toggle-btn.active-mp {
+    background: var(--mp-light);
+    border-color: var(--mp);
+    color: var(--mp);
+  }
+  .toggle-btn.active-hfa {
+    background: var(--hfa-light);
+    border-color: var(--hfa);
+    color: var(--hfa);
+  }
+
+  .field { margin-bottom: 1.25rem; }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input[type="text"]:focus { border-color: #aaa; }
+  input[type="text"].focus-mp:focus { border-color: var(--mp); }
+  input[type="text"].focus-hfa:focus { border-color: var(--hfa); }
+
+  input::placeholder { color: #bbb; }
+
+  .result {
+    display: none;
+    margin-top: 1.75rem;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .result-inner {
+    padding: 1.25rem 1.25rem 1rem;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .result-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .result-url {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+    word-break: break-all;
+    margin-bottom: 14px;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .action-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .action-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+  .action-btn:hover { background: var(--neutral); }
+
+  .action-btn.primary-mp {
+    background: var(--mp);
+    border-color: var(--mp);
+    color: #fff;
+  }
+  .action-btn.primary-mp:hover { background: #d1155f; }
+
+  .action-btn.primary-hfa {
+    background: var(--hfa);
+    border-color: var(--hfa);
+    color: #fff;
+  }
+  .action-btn.primary-hfa:hover { background: #258a84; }
+
+  .action-btn.outline-mp { color: var(--mp); border-color: var(--mp-mid); }
+  .action-btn.outline-mp:hover { background: var(--mp-light); }
+  .action-btn.outline-hfa { color: var(--hfa); border-color: var(--hfa-mid); }
+  .action-btn.outline-hfa:hover { background: var(--hfa-light); }
+
+  .no-org {
+    display: none;
+    margin-top: 1rem;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <p>HFA Team · GitHub Pages</p>
+    <h1>URL Generator</h1>
+  </div>
+
+  <div class="toggle-row">
+    <button class="toggle-btn" id="btn-mp" onclick="setOrg('megapixels')">
+      <span class="btn-label">🎨 Megapixels</span>
+      <span class="btn-url">hfateam.github.io/Megapixels</span>
+    </button>
+    <button class="toggle-btn" id="btn-hfa" onclick="setOrg('hfa')">
+      <span class="btn-label">📚 HFA</span>
+      <span class="btn-url">hfateam.github.io/HFA-Resources</span>
+    </button>
+  </div>
+
+  <div class="field">
+    <label>Filename <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">(with or without .html)</span></label>
+    <input type="text" id="filename" placeholder="e.g. vendor-guide" oninput="buildURL()" />
+  </div>
+
+  <div class="field">
+    <label>Subfolder <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">(optional)</span></label>
+    <input type="text" id="subfolder" placeholder="e.g. guides" oninput="buildURL()" />
+  </div>
+
+  <p class="no-org" id="no-org-msg">← Pick a site above first</p>
+
+  <div class="result" id="result-block">
+    <div class="result-inner" id="result-inner">
+      <p class="result-label" id="result-label">
+        <span class="dot" id="result-dot"></span>Generated URL
+      </p>
+      <p class="result-url" id="url-display"></p>
+      <div class="btn-row">
+        <button class="action-btn" id="copy-btn" onclick="copyURL()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy URL
+        </button>
+        <button class="action-btn" id="open-btn" onclick="openURL()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ORGS = {
+  megapixels: { base: 'https://hfateam.github.io/Megapixels', accent: 'mp' },
+  hfa:        { base: 'https://hfateam.github.io/HFA-Resources', accent: 'hfa' }
+};
+let selectedOrg = null;
+
+function setOrg(org) {
+  selectedOrg = org;
+  const a = ORGS[org].accent;
+  document.getElementById('btn-mp').className  = 'toggle-btn' + (org === 'megapixels' ? ' active-mp' : '');
+  document.getElementById('btn-hfa').className = 'toggle-btn' + (org === 'hfa'        ? ' active-hfa' : '');
+  document.getElementById('filename').className = `focus-${a}`;
+  document.getElementById('subfolder').className = `focus-${a}`;
+  styleResult(a);
+  buildURL();
+}
+
+function styleResult(a) {
+  const ri = document.getElementById('result-inner');
+  const dot = document.getElementById('result-dot');
+  const copyBtn = document.getElementById('copy-btn');
+  const openBtn = document.getElementById('open-btn');
+  const color = a === 'mp' ? 'var(--mp)' : 'var(--hfa)';
+  ri.style.borderColor = color;
+  dot.style.background = color;
+  copyBtn.className = `action-btn primary-${a}`;
+  openBtn.className = `action-btn outline-${a}`;
+}
+
+function buildURL() {
+  const filename = document.getElementById('filename').value.trim();
+  const subfolder = document.getElementById('subfolder').value.trim();
+  const resultBlock = document.getElementById('result-block');
+  const noOrg = document.getElementById('no-org-msg');
+
+  if (!filename) { resultBlock.style.display = 'none'; noOrg.style.display = 'none'; return; }
+  if (!selectedOrg) { resultBlock.style.display = 'none'; noOrg.style.display = 'block'; return; }
+
+  noOrg.style.display = 'none';
+  const fn = filename.endsWith('.html') ? filename : filename + '.html';
+  const base = ORGS[selectedOrg].base;
+  const path = subfolder ? `/${subfolder.replace(/^\/|\/$/g, '')}/${fn}` : `/${fn}`;
+  document.getElementById('url-display').textContent = base + path;
+  resultBlock.style.display = 'block';
+  document.getElementById('copy-btn').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy URL`;
+}
+
+function copyURL() {
+  const url = document.getElementById('url-display').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+    setTimeout(() => {
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy URL`;
+    }, 2000);
+  });
+}
+
+function openURL() {
+  window.open(document.getElementById('url-display').textContent, '_blank');
+}
+</script>
+</body>
+</html>
