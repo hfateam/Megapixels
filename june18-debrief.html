@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meeting Debrief — June 18</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2ABFBF;
+    --teal-light: #e6f9f9;
+    --teal-dark: #1a9090;
+    --cream: #FAF8F5;
+    --ink: #1C1C1C;
+    --ink-muted: #5a5a5a;
+    --ink-faint: #9a9a9a;
+    --border: #E2DDD6;
+    --pink-bg: #FDF0F5;
+    --pink-border: #F4C0D1;
+    --pink-text: #7a2845;
+    --success-bg: #EAF7F0;
+    --success-text: #1a6b42;
+    --warning-bg: #FFF8EC;
+    --warning-text: #8a5a00;
+    --danger-bg: #FEF0EF;
+    --danger-text: #9b2c2c;
+    --info-bg: #EBF4FD;
+    --info-text: #1a4f82;
+    --amber-bg: #FFF8EC;
+    --amber-text: #7a4800;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 0 0 4rem;
+  }
+
+  /* Header */
+  .page-header {
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 2rem 1.5rem;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teal-dark);
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+  }
+
+  .meta-row {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-top: 0.75rem;
+  }
+
+  .meta-row span { display: flex; align-items: center; gap: 5px; }
+
+  /* Nav */
+  .jump-nav {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .jump-nav a {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    text-decoration: none;
+    padding: 4px 10px;
+    border: 0.5px solid var(--border);
+    border-radius: 20px;
+    transition: all 0.15s;
+  }
+
+  .jump-nav a:hover { background: var(--teal-light); color: var(--teal-dark); border-color: var(--teal); }
+
+  /* Main */
+  .main { max-width: 860px; margin: 0 auto; padding: 2rem 2rem 0; }
+
+  /* Section blocks */
+  .block {
+    background: #fff;
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 14px;
+  }
+
+  .block-meg {
+    background: var(--pink-bg);
+    border-color: var(--pink-border);
+  }
+
+  .block-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .block-meg .block-label { color: var(--pink-text); }
+
+  .block-label svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  .sub-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 14px 0 8px;
+  }
+
+  .block-meg .sub-label { color: var(--pink-text); opacity: 0.65; }
+
+  .divider {
+    border: none;
+    border-top: 0.5px solid var(--border);
+    margin: 12px 0;
+  }
+
+  .block-meg .divider { border-color: var(--pink-border); }
+
+  /* Summary paragraph */
+  .summary-text {
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--ink-muted);
+  }
+
+  /* Rows */
+  .row {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    margin-bottom: 9px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .row.done {
+    text-decoration: line-through;
+    color: var(--ink-faint);
+  }
+
+  .row.done .badge { opacity: 0.7; }
+
+  .due {
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-left: auto;
+    white-space: nowrap;
+    padding-left: 8px;
+    flex-shrink: 0;
+  }
+
+  /* Badges */
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    padding: 2px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .b-decided { background: var(--success-bg); color: var(--success-text); }
+  .b-pending  { background: var(--warning-bg); color: var(--warning-text); }
+  .b-done     { background: var(--success-bg); color: var(--success-text); }
+  .b-meg      { background: var(--pink-bg); color: var(--pink-text); border: 0.5px solid var(--pink-border); }
+  .b-amanda   { background: var(--info-bg); color: var(--info-text); }
+  .b-open     { background: var(--danger-bg); color: var(--danger-text); }
+  .b-watch    { background: var(--amber-bg); color: var(--amber-text); }
+
+  /* Checkbox styling */
+  input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    cursor: pointer;
+    position: relative;
+    top: 2px;
+    transition: all 0.15s;
+    background: #fff;
+  }
+
+  input[type="checkbox"]:checked {
+    background: var(--teal);
+    border-color: var(--teal);
+  }
+
+  input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 5px;
+    height: 9px;
+    border: 2px solid #fff;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+  }
+
+  .block-meg input[type="checkbox"] { border-color: var(--pink-border); }
+  .block-meg input[type="checkbox"]:checked { background: var(--pink-text); border-color: var(--pink-text); }
+
+  label.row { cursor: pointer; }
+  label.row:hover { color: var(--teal-dark); }
+
+  /* Section h2 */
+  h2.section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 2rem 0 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Sub-note */
+  .note {
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-style: italic;
+    margin: 2px 0 8px;
+    padding-left: 24px;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  @media (max-width: 600px) {
+    .page-header, .jump-nav, .main { padding-left: 1rem; padding-right: 1rem; }
+    h1 { font-size: 1.8rem; }
+    .due { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="eyebrow">Megapixels School of the Arts · HFA · Internal</div>
+  <h1>Meeting Debrief — June 18</h1>
+  <div class="meta-row">
+    <span>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="2.5"/><path d="M3 13c0-2.76 2.24-5 5-5s5 2.24 5 5"/></svg>
+      Meg + Amanda · 102 mins
+    </span>
+    <span>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="11" rx="1.5"/><path d="M5 1v4M11 1v4M2 7h12"/></svg>
+      June 18, 2025
+    </span>
+    <span>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3.5l2 2"/></svg>
+      Full transcript — every task captured
+    </span>
+  </div>
+</div>
+
+<nav class="jump-nav">
+  <a href="#summary">Summary</a>
+  <a href="#decisions">Decisions</a>
+  <a href="#meg-todos">Meg's to-dos</a>
+  <a href="#amanda-todos">Amanda's to-dos</a>
+  <a href="#risks">Risks</a>
+  <a href="#parked">Parked</a>
+</nav>
+
+<div class="main">
+
+  <!-- Summary -->
+  <div id="summary" class="block" style="margin-top: 1.5rem;">
+    <div class="block-label">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h8M2 12h10"/></svg>
+      What we covered
+    </div>
+    <p class="summary-text">Walked through the new client portal in detail and got Meg's feedback. Aligned on Slack consolidation (group DMs only, archive Q&A and Ask Megan channels). Talked through Charity's hours risk, Tiffany's limited availability, and the backup teacher plan. Discussed new pre-recorded MP classes. Covered OutSchool conversion drop and recovery strategy. Decided yes to new HFA clients but Slack-only support, no live calls. Surfaced the master internal dashboard concept. July 20th confirmed as Meg's last day on client support.</p>
+  </div>
+
+  <!-- Meg decisions -->
+  <h2 class="section-title" id="decisions">Meg's decisions</h2>
+
+  <div class="block block-meg">
+    <div class="block-label">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 4L6 11l-3-3"/></svg>
+      Decided in this meeting
+    </div>
+
+    <div class="row"><span class="badge b-decided">decided</span><span>Remove messenger from client portal — all questions go through Slack group DMs only</span></div>
+    <div class="row"><span class="badge b-decided">decided</span><span>Archive #group-q&a and #ask-megan-and-team — keep only Wins + Announcements channels</span></div>
+    <div class="row"><span class="badge b-decided">decided</span><span>Tag clients in every Slack response so nothing gets missed</span></div>
+    <div class="row"><span class="badge b-decided">decided</span><span>New HFA clients: yes — Slack-only support, no live calls</span></div>
+    <div class="row"><span class="badge b-decided">decided</span><span>Meg does one sales call to close new clients; Amanda handles everything after</span></div>
+    <div class="row"><span class="badge b-decided">decided</span><span>Meg checks Slack 1–2x daily max — notifications off</span></div>
+    <div class="row"><span class="badge b-decided">decided</span><span>All Meg → Ciara communication routes through Amanda first</span></div>
+    <div class="row"><span class="badge b-decided">decided</span><span>Tiffany moves to pre-recorded videos only + 2–3 hrs/week live MP at most</span></div>
+    <div class="row"><span class="badge b-decided">decided</span><span>New pre-recorded classes: Portraits + easier Art 1A (= Foundations for Kids — same class)</span></div>
+    <div class="row"><span class="badge b-decided">decided</span><span>No August live call with existing clients — July 20th is Meg's last day on client support</span></div>
+    <div class="row"><span class="badge b-decided">decided</span><span>Admin tasks go to Camille, not Charity — teachers don't do admin</span></div>
+    <div class="row"><span class="badge b-decided">decided</span><span>Peer support + social Slack channels not needed — clients know each other on Facebook</span></div>
+    <div class="row"><span class="badge b-decided">decided</span><span>Don't rewrite OutSchool descriptions yet — find original converting template first</span></div>
+    <div class="row"><span class="badge b-decided">decided</span><span>Stop bundling live + pre-recorded together — one or the other going forward, same price or slightly more</span></div>
+
+    <div class="divider"></div>
+    <div class="sub-label">Committed but pending</div>
+    <div class="row"><span class="badge b-pending">pending</span><span>Send updated NH vendor description text to Amanda</span><span class="due">ASAP — directories are blocked</span></div>
+    <div class="row"><span class="badge b-pending">pending</span><span>Complete HFA pricing strategy using A2A</span><span class="due">before July funding drop</span></div>
+    <div class="row"><span class="badge b-pending">pending</span><span>Prep Art 1A remake outline / vision doc for Tiffany</span><span class="due">before Tiffany records</span></div>
+  </div>
+
+  <!-- Meg to-dos -->
+  <h2 class="section-title" id="meg-todos">Meg's to-do list</h2>
+
+  <div class="block block-meg">
+    <div class="block-label">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="2" width="10" height="12" rx="1.5"/><path d="M6 6h4M6 9h4M6 12h2"/></svg>
+      Check things off as you go
+    </div>
+
+    <div class="sub-label">Decisions needed — before July</div>
+
+    <label class="row"><input type="checkbox"><span class="badge b-meg">Meg</span><span>Decide MP class pricing (use A2A lesson 2–3 to help)</span><span class="due">before July funding drop</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-meg">Meg</span><span>Decide how many live MP classes to run for fall and which ones</span><span class="due">before July</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-meg">Meg</span><span>Review DLS and flag any updates needed — Amanda + Camille will make them</span><span class="due">before July</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-meg">Meg</span><span>Do sales call(s) to close 2 new HFA clients</span><span class="due">before leave</span></label>
+
+    <div class="divider"></div>
+    <div class="sub-label">Action items</div>
+
+    <label class="row"><input type="checkbox"><span class="badge b-meg">Meg</span><span>Send updated NH vendor description text to Amanda</span><span class="due">ASAP</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-meg">Meg</span><span>Complete HFA pricing strategy in A2A</span><span class="due">before July funding drop</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-meg">Meg</span><span>Prep Art 1A remake outline / vision doc for Tiffany</span><span class="due">before Tiffany records</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-meg">Meg</span><span>Make Portraits pre-recorded class video</span><span class="due">TBD</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-meg">Meg</span><span>Make Art 1A remake / Foundations for Kids pre-recorded video</span><span class="due">TBD</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-meg">Meg</span><span>Do OutSchool market research — use Claude with web search, find top trending art/drawing classes, build new pre-recorded class off findings</span><span class="due">TBD</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-meg">Meg</span><span>Optimize remaining vendor directory ESA videos (estimated 4–15 left)</span><span class="due">TBD</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-meg">Meg</span><span>Review and approve client portal before Amanda builds client-facing version</span><span class="due">TBD</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-meg">Meg</span><span>Decide on Slack Pro vs. Camille for manual transcripts (once Amanda brings back pricing)</span><span class="due">after Amanda researches</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-meg">Meg</span><span>Purchase Whisperflow — ran out of credits</span><span class="due">soon</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-meg">Meg</span><span>Finish remaining HFA videos she committed to making</span><span class="due">before leave</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-meg">Meg</span><span>Go back through A2A from the beginning — thoroughly, no skipping</span><span class="due">ongoing</span></label>
+
+    <div class="divider"></div>
+    <label class="row done"><input type="checkbox" checked><span class="badge b-done">done</span><span>Reach out to Charity directly about hours situation</span></label>
+  </div>
+
+  <!-- Amanda to-dos -->
+  <h2 class="section-title" id="amanda-todos">Amanda's action items</h2>
+
+  <div class="block">
+    <div class="block-label">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l3 3 7-7"/></svg>
+      Client portal
+    </div>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Remove messenger feature from client portal</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Add "stuck / ready for more videos" status alert to admin dashboard</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Add onboarding section to portal (live, pre-recorded, or both + what client plans to offer)</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Create new version of "Organize Now Save Time Later" lesson — watch old one first, make sure nothing is lost</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Set up client portals for all current clients once Meg approves Jackson's version</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Do an intro call with each client to walk them through the portal</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Build master internal landing page / dashboard of dashboards (HFA + MP, links to all tools)</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Run call schedule generator for all clients — report end dates back to Meg (e.g. Tina likely ends November)</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Update call schedule dates in portals once confirmed</span></label>
+  </div>
+
+  <div class="block">
+    <div class="block-label">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5h12M2 8h8M2 11h5"/></svg>
+      Slack
+    </div>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Archive #group-q&a and #ask-megan-and-team (keep read access, disable new posts)</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Set up individual group DMs per client (client + Meg + Amanda + Ciara)</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Tell all clients: no more DMing individually — all questions in group chat only</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Tag clients in every response going forward</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Look into Slack automation for flagging unanswered messages</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Research Slack Pro cost per seat vs. Camille doing manual transcript work — bring recommendation to Meg</span></label>
+  </div>
+
+  <div class="block">
+    <div class="block-label">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="8,2 10,6 14,6 11,9 12,13 8,11 4,13 5,9 2,6 6,6"/></svg>
+      Videos & content
+    </div>
+    <label class="row done"><input type="checkbox" checked><span class="badge b-done">done</span><span>Publish "Suncoast Part 2" video and send to Paige</span></label>
+    <div class="divider" style="margin: 6px 0 10px;"></div>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Create 3–4 new videos for Paige's school applications</span><span class="due">by Friday</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Review Ciara's charter school list (narrowed to 10–15) and factor into video plan</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Create summer class scheduling video (add to DLS too)</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Update vendor directories with new classes + pricing — waiting on Meg's NH text first</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Continue building FAQ from weekly Slack exports (via Claude)</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>When Meg makes optimization videos — go in and make the changes she calls out</span></label>
+  </div>
+
+  <div class="block">
+    <div class="block-label">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+      OutSchool
+    </div>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Find original high-converting OutSchool description template — check unlisted classes, especially Dragons. Look for a version with NO bullet-point benefits section AND no ChatGPT rewrite</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Also find and back up the version where Meg added bullet-point benefits — even if we don't use it</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Research top-performing OutSchool art/drawing classes in incognito — note keywords, coupons, video style, description length. Bring findings to Meg</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Check Sunday vs. weekday enrollment numbers — report back to Meg</span></label>
+  </div>
+
+  <div class="block">
+    <div class="block-label">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="5" r="2"/><circle cx="10" cy="5" r="2"/><path d="M2 13c0-2.2 1.8-4 4-4M10 9c2.2 0 4 1.8 4 4"/></svg>
+      Staffing
+    </div>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Contact Tiffany — ask what 1–2 time slots she could do for live MP, and when she's available to record pre-recorded videos</span><span class="due">reply by tomorrow</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Contact Charity — gauge retention risk honestly, ask about probability of leaving in next 6 months, mention possibility of slight hours increase + live MP classes</span><span class="due">reply by tomorrow</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Contact Cheyenne — check availability, interest in live MP classes, how close she is to her teaching credential</span><span class="due">reply by tomorrow</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Contact Kim — check availability and interest in live MP classes (younger kids focus)</span><span class="due">reply by tomorrow</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Confirm Charity's current hours (approx 11–12 but verify)</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>See if Camille can take one of Amanda's OutSchool inbox shifts</span></label>
+  </div>
+
+  <div class="block">
+    <div class="block-label">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="12" height="9" rx="1.5"/><path d="M5 4V3a1 1 0 011-1h4a1 1 0 011 1v1"/></svg>
+      HFA clients
+    </div>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Check on COR volunteer letter response from DOJ — was still pending at time of call</span></label>
+    <label class="row"><input type="checkbox"><span class="badge b-amanda">Amanda</span><span>Keep Meg posted on COR status before confirming new client intake</span></label>
+  </div>
+
+  <!-- Risks -->
+  <h2 class="section-title" id="risks">Risks & things to watch</h2>
+
+  <div class="block">
+    <div class="block-label">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2l6 12H2L8 2z"/><path d="M8 7v3M8 12v.5"/></svg>
+      Flag these
+    </div>
+    <div class="row"><span class="badge b-open">high risk</span><span>Charity is the only Sunday teacher, needs full-time income, and is likely already job searching — two weeks notice is not enough runway to find a replacement</span></div>
+    <div class="row"><span class="badge b-open">high risk</span><span>OutSchool conversion dropped from 17% to near zero — this is active revenue bleed, not a background task</span></div>
+    <div class="row"><span class="badge b-watch">watch</span><span>Tiffany is effectively pre-recorded only now — don't plan live classes around her availability</span></div>
+    <div class="row"><span class="badge b-watch">watch</span><span>Meg's client support ends July 20th — the August live call reference needs to be quietly walked back</span></div>
+    <div class="row"><span class="badge b-watch">watch</span><span>New client COR still pending DOJ response — don't overcommit on new clients until this clears</span></div>
+    <div class="row"><span class="badge b-watch">watch</span><span>Vendor directory updates fully blocked on Meg's NH text — follow up if it doesn't arrive soon</span></div>
+    <div class="row"><span class="badge b-watch">watch</span><span>Meg mentioned Alison as a potential hire if Amanda gets overwhelmed — keep in back pocket</span></div>
+  </div>
+
+  <!-- Parked -->
+  <h2 class="section-title" id="parked">Parked — came up but not resolved</h2>
+
+  <div class="block">
+    <div class="block-label">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 11v.5"/></svg>
+      For a future session
+    </div>
+    <div class="row"><span class="badge b-open">unresolved</span><span>Whether to use client portal for MP students — Meg said "question for another time, maybe next year"</span></div>
+    <div class="row"><span class="badge b-open">unresolved</span><span>COR/DOJ pivot decision (school-paid background checks) — touched on but depends on volunteer letter response</span></div>
+    <div class="row"><span class="badge b-open">unresolved</span><span>Claude seat setup — Meg wants a personal seat separate from business account, extra seat still available</span></div>
+    <div class="row"><span class="badge b-open">unresolved</span><span>Tiffany's OutSchool classes (4 of them) — Meg wants to reassign ASAP but depends on staffing outcome</span></div>
+    <div class="row"><span class="badge b-open">unresolved</span><span>Authority matrix and escalation plan for while Meg is on leave — not covered today</span></div>
+    <div class="row"><span class="badge b-open">unresolved</span><span>Whether to build a passive HFA sales funnel before leave vs. after baby</span></div>
+    <div class="row"><span class="badge b-open">unresolved</span><span>Admin candidate formalized (Alison, Hunter, Camille, Ciara) — Camille filling in but not official</span></div>
+  </div>
+
+</div>
+
+<footer>
+  Megapixels School of the Arts · HFA · Internal use only<br>
+  Meeting: June 18, 2025 · Debrief compiled from full 102-min transcript
+</footer>
+
+<script>
+  // Persist checkbox state in localStorage
+  document.querySelectorAll('input[type="checkbox"]').forEach((cb, i) => {
+    const key = 'june18-cb-' + i;
+    if (localStorage.getItem(key) === 'true') {
+      cb.checked = true;
+      const row = cb.closest('.row');
+      if (row && !row.classList.contains('done')) {
+        row.style.textDecoration = 'line-through';
+        row.style.color = '#9a9a9a';
+      }
+    }
+    cb.addEventListener('change', () => {
+      localStorage.setItem(key, cb.checked);
+      const row = cb.closest('.row');
+      if (row && !row.classList.contains('done')) {
+        row.style.textDecoration = cb.checked ? 'line-through' : '';
+        row.style.color = cb.checked ? '#9a9a9a' : '';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
