@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style></head><body>
+<title>Megapixels &amp; HFA Projects</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..800,100&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: sticky header with tabs, summary strip, filterable card grid; retention tab is a semester timeline of stages */
+:root{
+  --bg:#faf8f3; --surface:#ffffff; --ink:#241712; --muted:#6b5548; --line:#ecdfcc; --soft:#f3ecdf;
+  --accent:#b4441c; --accent-soft:#f9e1d4; --plum:#5b2a55; --plum-soft:#f0e1ee; --olive:#4d5a1e; --olive-soft:#e8ecd2; --mustard:#c8901a;
+  --live:#4d5a1e; --live-soft:#e8ecd2; --prog:#8a5d00; --prog-soft:#fcecc4; --back:#5b2a55; --back-soft:#f0e1ee; --on-accent:#ffffff; --band:#5b2a55; --on-band:#fbf3e6; --band-muted:#d9bcd3;
+  --display:"Fraunces", "Iowan Old Style", Georgia, serif;
+  --body:"Instrument Sans", "Helvetica Neue", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1d1310; --surface:#2a1c17; --ink:#f6eee2; --muted:#c2ab98; --line:#46322a; --soft:#33231d;
+  --accent:#ec7a4a; --accent-soft:#4a2214; --plum:#d9a0d2; --plum-soft:#3e2240; --olive:#bccb6e; --olive-soft:#2d3315; --mustard:#f2bf4a;
+  --live:#bccb6e; --live-soft:#2d3315; --prog:#f2bf4a; --prog-soft:#45330e; --back:#d9a0d2; --back-soft:#3e2240; --on-accent:#1d1310; --band:#3b1a37; --on-band:#f6eee2; --band-muted:#c9a3c3; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1d1310; --surface:#2a1c17; --ink:#f6eee2; --muted:#c2ab98; --line:#46322a; --soft:#33231d;
+  --accent:#ec7a4a; --accent-soft:#4a2214; --plum:#d9a0d2; --plum-soft:#3e2240; --olive:#bccb6e; --olive-soft:#2d3315; --mustard:#f2bf4a;
+  --live:#bccb6e; --live-soft:#2d3315; --prog:#f2bf4a; --prog-soft:#45330e; --back:#d9a0d2; --back-soft:#3e2240; --on-accent:#1d1310; --band:#3b1a37; --on-band:#f6eee2; --band-muted:#c9a3c3; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+a{color:var(--accent)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--band);color:var(--on-band)}
+header.top::after{content:"";display:block;height:10px;background:linear-gradient(to bottom,var(--accent) 0 25%,var(--mustard) 25% 50%,var(--olive) 50% 75%,var(--plum) 75% 100%)}
+.top-inner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding-block:14px}
+.brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.brand h1{font-size:1.5rem;font-weight:700;letter-spacing:-.01em;font-variation-settings:'SOFT' 100}
+.brand h1 .amp{color:var(--mustard);font-style:italic}
+.brand small{color:var(--band-muted);font-size:.85rem}
+.tabs{display:flex;gap:4px;background:rgba(255,255,255,.12);padding:4px;border-radius:999px}
+.tabs button{border:0;background:transparent;padding:7px 16px;border-radius:999px;cursor:pointer;font-weight:600;font-size:.9rem;color:var(--band-muted)}
+.tabs button[aria-selected="true"]{background:var(--mustard);color:#241712;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+.intro{padding-block:28px 8px;display:grid;gap:18px}
+.intro p{margin:0;max-width:64ch;color:var(--muted)}
+.stats{display:flex;flex-wrap:wrap;gap:10px}
+.stat{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer;text-align:left}
+.stat b{font-family:var(--display);color:var(--accent);font-size:1.5rem;font-variant-numeric:tabular-nums;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.stat[aria-pressed="true"]{border-color:var(--ink)}
+
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-block:14px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 13px;font-size:.85rem;cursor:pointer;font-weight:500}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.search{flex:1 1 200px;min-width:0;max-width:300px;margin-left:auto;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font:inherit;color:var(--ink)}
+.sep{width:1px;height:22px;background:var(--line)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;padding-block:6px 40px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.card h3{font-size:1.12rem;font-weight:700;line-height:1.25}
+.meta{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:6px;white-space:nowrap}
+.org-MP{background:var(--accent-soft);color:var(--accent)}
+.org-HFA{background:var(--olive-soft);color:var(--olive)}
+.st-live{background:var(--live-soft);color:var(--live)}
+.st-progress{background:var(--prog-soft);color:var(--prog)}
+.st-backburner{background:var(--back-soft);color:var(--back)}
+.st-idea{background:var(--accent-soft);color:var(--accent)}
+.kind{color:var(--muted);font-size:.8rem}
+.desc{margin:0;color:var(--ink)}
+.block h4{margin:0 0 4px;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.block ul{margin:0;padding-left:18px;display:grid;gap:3px}
+.block p{margin:0}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
+.links a{font-size:.85rem;font-weight:600;text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:5px 10px;overflow-wrap:anywhere}
+.links a:hover{border-color:var(--accent)}
+.needs{font-size:.8rem;color:var(--prog);background:var(--prog-soft);border-radius:8px;padding:6px 10px}
+.foot{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 0}
+
+/* Retention tab */
+.callout{display:grid;grid-template-columns:1fr;gap:10px;background:var(--prog-soft);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:14px;padding:20px}
+.callout h2{font-size:1.25rem}
+.callout p{margin:0;max-width:70ch}
+.quote{font-style:italic;color:var(--ink);opacity:.8;border-left:2px solid var(--mustard);padding-left:12px}
+.top5{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:18px 0 6px}
+.top5 button{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;display:grid;gap:6px;align-content:start}
+.top5 button:hover{border-color:var(--accent)}
+.top5 .rank{font-family:var(--display);font-weight:800;font-size:1.6rem;color:var(--accent);line-height:1}
+.top5 .t{font-weight:600}
+.top5 .s{font-size:.82rem;color:var(--muted)}
+.stage{padding-block:26px 4px}
+.stage-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.stage-head h2{font-size:1.3rem}
+.stage-head .when{font-size:.85rem;color:var(--muted)}
+.stage-num{font-family:var(--display);font-weight:800;color:var(--plum);font-size:.9rem;letter-spacing:.04em}
+.idea-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.idea.top{border-color:var(--accent)}
+.badge-top{background:var(--accent);color:var(--on-accent);font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap}
+.path{display:grid;gap:4px;font-size:.88rem;background:var(--soft);border-radius:10px;padding:10px 12px}
+.path b{font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--plum)}
+.flash{animation:flash 1.4s ease}
+@keyframes flash{0%{box-shadow:0 0 0 3px var(--accent)}100%{box-shadow:0 0 0 0 transparent}}
+@media (prefers-reduced-motion: reduce){.flash{animation:none}}
+footer.page{border-top:1px solid var(--line);padding-block:20px 40px;color:var(--muted);font-size:.85rem}
+@media (max-width:520px){.grid,.idea-grid{grid-template-columns:1fr}.search{max-width:none;margin-left:0}.sep{display:none}}
+</style>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <div class="brand"><h1>Megapixels <span class="amp">&amp;</span> HFA</h1><small>Project board, kept by Amanda</small></div>
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tab-projects" aria-selected="true" data-tab="projects">Projects</button>
+      <button role="tab" id="tab-retention" aria-selected="false" data-tab="retention">Retention roadmap</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="view-projects">
+    <div class="intro">
+      <p>Everything built for Megapixels School of the Arts and Homeschool Funding Accelerator, what's live, what's moving, and what's parked with the next steps to pick it back up.</p>
+      <div class="stats" id="stats"></div>
+    </div>
+    <div class="filters" id="filters"></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section id="view-retention" hidden>
+    <div class="intro">
+      <p>Ideas for getting more Megapixels families to enroll in another semester. They're grouped by where they land in a student's semester, from week one through summer break. Every one is still an idea, so each card lists the first steps to get it moving.</p>
+    </div>
+    <div class="callout">
+      <span class="tag st-idea" style="justify-self:start">Start here</span>
+      <h2>A teacher-written note at the end of every course</h2>
+      <p>Parents already value Megapixels feedback more than anything else. A short end-of-course note from the teacher turns that into the reason to come back.</p>
+      <p class="quote">"When Emily started, she struggled with proportions. Over the past 12 weeks, she learned to observe details, shade confidently, and persevere through difficult drawings. One thing I especially noticed was how much her confidence grew. I think she'd thrive in our Animal Artist track next."</p>
+      <p>Send it in the celebration email with the certificate and a before and after of their artwork, and one build covers four of the top five ideas.</p>
+    </div>
+    <h2 style="font-size:1.1rem;margin-top:26px">Top 5 priorities</h2>
+    <div class="top5" id="top5"></div>
+    <div id="stages"></div>
+  </section>
+</main>
+
+<footer class="page"><div class="wrap" id="footnote"></div></footer>
+
+<script>
+/* ===== EDIT DATA HERE =====
+   status: live | progress | backburner | idea
+   org: MP | HFA
+   private: true hides the item from the public GitHub Pages copy
+   needs: what's still missing from Amanda (shown as a yellow note)        */
+const PUBLIC_BUILD = true;
+const LAST_UPDATED = "October 1, 2026";
+
+const PROJECTS = [
+  { name:"Team Resource Hub", org:"HFA", status:"live", kind:"Web page",
+    desc:"One landing page that pulls every HFA and Megapixels tool into two tabs, so the team has a single place to start.",
+    links:[{label:"Live page", url:"https://hfateam.github.io/HFA-Resources/"},{label:"Repo", url:"https://github.com/hfateam/HFA-Resources"}],
+    needs:"Confirm the live URL" },
+  { name:"HFA Operations Dashboard", org:"HFA", status:"live", kind:"Web app",
+    desc:"Replaced the old Google Sheets workflow. Key Notes with a risks banner, a live Monday.com task board with per-person counters, meeting notes, a school directory of 56 charter schools and ESAs, and a Loom video manager.",
+    links:[{label:"Live page", url:"https://hfateam.github.io/HFA-Resources/checklist.html"}] },
+  { name:"Client Portal System", org:"HFA", status:"live", kind:"Web app", private:true,
+    desc:"An admin dashboard plus a page for each vendor client, with a 22-step onboarding checklist, school and ESA trackers, and a flag system that feeds an Open Questions panel.",
+    links:[{label:"Admin dashboard", url:"https://hfateam.github.io/HFA-Resources/hfa-admin-dashboard.html"}],
+    needs:"Confirm the link. Internal only, hidden from the public copy" },
+  { name:"Student Registration Automation", org:"MP", status:"progress", kind:"Google Apps Script",
+    desc:"Built and ready to install. It reads school POs that arrive in Gmail, matches each one to the right student's registration, and flags matches so the admin can add the student in Funnel Gorgeous and send class links. Parents or schools get an automatic email when a PO or registration is missing.",
+    wins:["All 7 real POs matched the right student, including a scanned PDF, a certificate and an order agreement","No wrong matches when each student's registration was pulled out and the test re-run","Caught a class mismatch between a PO and a student's actual class on its own","Monthly repeat POs get marked Extra PO for invoicing and don't send a second welcome email"],
+    safety:["Starts in test mode, so every email goes to a test inbox until it's switched off","Never touches Form Responses 1 or its color coding","POs from before go-live never send automatic emails and show on the Dashboard for personal follow-up"],
+    next:["Ciara installs it using the numbered setup guide","Run the test-mode check in Part 2 of the guide, since this is the first run inside Google","Review the five email templates in Meg's voice on the Email Templates tab","Trim the school dropdown in Part 5 to schools still in use","Watch the PO Inbox tab closely the first week, then switch off test mode","Hear back from Funnel Gorgeous on whether their webhook can make the add-to-FG step automatic too"],
+    owner:"Ciara (install) and Amanda (review)" },
+  { name:"Enrollment Dashboard", org:"MP", status:"live", kind:"Web app",
+    desc:"Interactive dashboard so Meg can see enrollment trends visually instead of digging through spreadsheets. Executive summary, schools and classes, trends and alerts, and returning students, all pulled live from one Excel file in GitHub.",
+    links:[{label:"Live page", url:"https://hfateam.github.io/Megapixels/megapixels_dashboard_1.html"}] },
+  { name:"Invoicing Automation", org:"MP", status:"backburner", kind:"Automation",
+    desc:"Turning purchase orders into invoices automatically across 7+ school and ESA billing platforms, with tracking and 30-day payment reminders.",
+    links:[], next:["Pick a tool stack (Invoice Ninja, Airtable, Make.com were on the shortlist)","Map each school to its invoicing method from the master billing sheet","Pilot with one platform before the rest"],
+    blocker:"Needs a decision on tools and budget", owner:"TBD" },
+  { name:"Slack to Claude FAQ Pipeline", org:"HFA", status:"backburner", kind:"Automation",
+    desc:"Pull new Slack questions straight into an FAQ knowledge base instead of exporting channel files by hand.",
+    links:[], next:["Decide if Slack Pro is worth it for full history and API export","Sketch the pipeline from one channel first"],
+    blocker:"Slack plan limits", owner:"TBD" },
+  { name:"Megapixels GitHub Repo", org:"MP", status:"live", kind:"Repo",
+    desc:"Home for Megapixels web pages and tools hosted on GitHub Pages.",
+    links:[{label:"Repo", url:"https://github.com/hfateam/Megapixels"}],
+    needs:"List the pages that live here so each gets its own card" },
+  { name:"New Hampshire ESA Listing", org:"MP", status:"progress", kind:"Listing",
+    desc:"The Megapixels school listing on the NH ESA platform, formatted with brand colors, course cards, testimonials and an embedded video.",
+    links:[], needs:"Add link and current status" },
+  { name:"Megapixels Newsletter", org:"MP", status:"progress", kind:"Email",
+    desc:"Newsletter on Kit with list segments, a 90-day content calendar, and three launch emails written in Meg's voice using founder-led transformation stories.",
+    links:[], next:["Finish platform setup and segments","Schedule the three launch emails"],
+    needs:"Add link and current status" },
+  { name:"Outschool Listing Refresh", org:"MP", status:"progress", kind:"Marketplace",
+    desc:"Competitive audit and rewritten titles and descriptions so Megapixels classes show up better on Outschool, without losing the warm studio voice.",
+    links:[], next:["Finish rewrites for the rest of the catalog"],
+    needs:"Add link and current status" },
+  { name:"New Outschool Classes", org:"MP", status:"backburner", kind:"Curriculum",
+    desc:"Three openings the audit found. Fashion Design and Illustration (strongest), Hand Lettering (fast to build, low competition), and Nature Sketching (credibility with charters and ESAs).",
+    links:[], next:["Pick which one to build first","Find a teacher for it","Outline the class and write the listing"],
+    blocker:"Teacher availability", owner:"TBD" },
+];
+
+const STAGES = [
+  { id:"during", name:"During the course", when:"Weeks 1 to final lesson" },
+  { id:"finale", name:"The finale", when:"Last week and the days after" },
+  { id:"journey", name:"The bigger journey", when:"Across semesters" },
+  { id:"between", name:"Between semesters", when:"Summer and breaks" },
+  { id:"community", name:"Community and recognition", when:"Year-round" },
+];
+
+const IDEAS = [
+  { n:1, stage:"during", name:"Personalized teacher feedback", desc:"Already the superpower. Lean in with Looms, voice notes, and calling out specific improvements.",
+    next:["End every piece of feedback with \"Here's what I'd love to see you draw next…\"","Share a short feedback template with teachers","Pick Loom or voice memo as the default"] },
+  { n:3, stage:"during", name:"Progress dashboard for parents", desc:"Lessons completed, artwork submitted, teacher feedback, current level, and recommended next class.",
+    next:["Start with a simple Google Sheet or Classroom tracker for one class","Test with a few families before rolling out"] },
+  { n:7, stage:"during", name:"Parent progress emails", top:2, desc:"Good-news emails instead of only reaching out when something's wrong. \"Emma just mastered shading!\"",
+    next:["Write 3 or 4 milestone templates (new skill, halfway, 80% done, latest artwork)","Decide who sends and when","Could run through Kit next to the newsletter"] },
+  { n:10, stage:"during", name:"Digital badges", desc:"Shading Master, Dragon Artist, Observation Expert, Perspective Explorer. Kids love collecting things.",
+    next:["Draft a badge list tied to real skills in each course","Design the badge graphics"] },
+  { n:18, stage:"during", name:"Semester countdown", desc:"\"Only 3 lessons left! Don't forget to submit your final artwork.\" Helps students actually finish.",
+    next:["Write a 3-lessons-left reminder","Add a final artwork reminder"] },
+
+  { n:21, stage:"finale", name:"Teacher-written end-of-course note", desc:"Where the student started, what they learned, how their confidence grew, and one class to take next.",
+    next:["Write a fill-in prompt so each note takes teachers about 5 minutes","Test it with one class this semester","Bundle with the certificate and celebration email"] },
+  { n:4, stage:"finale", name:"One clear \"what's next\"", top:1, desc:"Never let a course end without answering where the child should go next. One recommendation, not ten.",
+    next:["Map every course to exactly one next course","Put it in the final lesson, certificate, and celebration email","Let teachers override when a student fits elsewhere"] },
+  { n:13, stage:"finale", name:"Parent celebration email", top:2, desc:"\"Look what your child accomplished\" instead of \"your course ended.\" Artwork, certificate, teacher quote, next recommendation.",
+    next:["Build one template","Replace any existing course-ended messaging"] },
+  { n:2, stage:"finale", name:"Skills certificates", top:3, desc:"\"Megapixels Realistic Drawing Graduate\" with the student's name, artwork, teacher signature, and skills mastered. Parents print these.",
+    next:["List 3 to 5 skills mastered for each course","Design one template per course","Decide on PDF by email or printed"] },
+  { n:19, stage:"finale", name:"\"You've grown so much\" email", desc:"First artwork next to latest artwork. Parents often don't see the growth until it's side by side.",
+    next:["Reuse the before and after images from idea #12","Send near the end of the course"] },
+  { n:11, stage:"finale", name:"Graduation video", desc:"The teacher says \"We're so proud of you…\" An emotional ending makes continuing feel natural.",
+    next:["Have each teacher record one short message per class","Send it with the celebration email"] },
+
+  { n:5, stage:"journey", name:"Learning paths", top:5, desc:"Turn standalone classes into a journey so the next class is obvious.",
+    path:[ "Realism · FUNdamentals → Animal Drawing 1 → Animal Drawing 2 → Foundations of Realistic Drawing",
+           "Fantasy · Minecraft Animals or Dinosaur Drawing → Wings of Fire Dragons → a new advanced fantasy class",
+           "Paint · Watercolor Fun and Easy → Watercolor Animals → Acrylic Animals in Nature" ],
+    next:["Review these draft tracks with Meg and the teachers","Find gaps where a track needs a class that doesn't exist yet","Show the paths on the website and listings"] },
+  { n:12, stage:"journey", name:"Before and after gallery", top:4, desc:"First drawing next to final drawing, so families see the transformation.",
+    next:["Collect each student's first and final drawing","Pick a format (email, web page)","Get parent permission for anything public"] },
+  { n:6, stage:"journey", name:"Student portfolio", desc:"First, middle, and final drawing saved together so growth is obvious over time.",
+    next:["Save three pieces per student per course in one place","Decide where it lives (Drive folder or Classroom)"] },
+
+  { n:14, stage:"between", name:"Summer challenges", desc:"30-Day Sketch, Animal, Fantasy, or Holiday challenges to stay top of mind between semesters.",
+    next:["Pick one or two challenges","Write the prompt list","Promote it before the semester ends"] },
+  { n:17, stage:"between", name:"Referral rewards", desc:"Invite another homeschool family and earn a bonus lesson, mini workshop, art challenge, or special critique.",
+    next:["Choose the reward","Set up simple tracking","Ask in the celebration email when families are happiest"] },
+
+  { n:20, stage:"community", name:"Character awards", desc:"Perseverance, Courage, Creativity, Kindness, Growth Mindset. Matches the mission of confidence, creativity, and character.",
+    next:["Finalize the award list","Pair awards with the certificate"] },
+  { n:8, stage:"community", name:"Monthly student showcase", desc:"\"My drawing is on the website!\" Kids love it and parents share it.",
+    next:["Pick where it lives (website page or newsletter section)","Set up submission and parent permission"] },
+  { n:9, stage:"community", name:"Artist of the month", desc:"Highlights effort, improvement, kindness, and creativity, not just talent.",
+    next:["Have teachers nominate monthly","Feature in the newsletter and showcase"] },
+  { n:15, stage:"community", name:"Annual online art show", desc:"Families invite grandparents, schools see it, students feel proud. Could become part of the brand.",
+    next:["Pick a format and date","Build from the showcase and before and after collections"] },
+  { n:16, stage:"community", name:"Parent community group", desc:"Parents share artwork, questions, encouragement, and homeschool ideas between enrollments.",
+    next:["Decide on a Facebook group or the existing Skool","Set guidelines and a moderator"] },
+];
+
+const TOP5_LABELS = {1:"Every course ends with one clear next recommendation",2:"Parent progress and celebration emails",3:"Certificates that highlight skills mastered",4:"Before and after galleries",5:"Learning paths that turn classes into a journey"};
+const TOP5_TARGET = {1:4,2:13,3:2,4:12,5:5};
+
+/* ===== RENDERING ===== */
+const STATUS = { live:"Live", progress:"In progress", backburner:"Back burner", idea:"Idea" };
+const ORG = { MP:"Megapixels", HFA:"HFA" };
+function h(tag, attrs, ...kids){
+  const el = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs||{})){
+    if (v==null || v===false) continue;
+    if (k==="class") el.className = v; else if (k==="text") el.textContent = v;
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v); else el.setAttribute(k, v);
+  }
+  for (const kid of kids.flat()) if (kid!=null && kid!==false) el.append(kid instanceof Node ? kid : document.createTextNode(kid));
+  return el;
+}
+const projects = PROJECTS.filter(p => !(PUBLIC_BUILD && p.private));
+const state = { org:"all", status:"all", q:"" };
+
+function block(title, items){
+  if (!items || !items.length) return null;
+  return h("div",{class:"block"}, h("h4",{text:title}), h("ul",{}, items.map(t=>h("li",{text:t}))));
+}
+function projectCard(p){
+  return h("article",{class:"card"},
+    h("div",{class:"card-head"},
+      h("h3",{text:p.name}),
+      h("div",{class:"meta"}, h("span",{class:"tag org-"+p.org,text:ORG[p.org]}))),
+    h("div",{class:"meta"}, h("span",{class:"tag st-"+p.status,text:STATUS[p.status]}), h("span",{class:"kind",text:p.kind})),
+    h("p",{class:"desc",text:p.desc}),
+    block("How testing went", p.wins),
+    block("Safety nets", p.safety),
+    block("Next steps", p.next),
+    p.blocker ? h("div",{class:"block"}, h("h4",{text:"Blocked by"}), h("p",{text:p.blocker})) : null,
+    (!PUBLIC_BUILD && p.needs) ? h("div",{class:"needs",text:"To fill in · "+p.needs}) : null,
+    (p.links||[]).length ? h("div",{class:"links"}, p.links.map(l=>h("a",{href:l.url,target:"_blank",rel:"noopener",text:l.label+" ↗"}))) : null,
+    p.owner ? h("div",{class:"foot"}, h("span",{text:"Owner · "+p.owner})) : null
+  );
+}
+function renderStats(){
+  const el = document.getElementById("stats"); el.replaceChildren();
+  for (const s of ["live","progress","backburner"]){
+    const n = projects.filter(p=>p.status===s && (state.org==="all"||p.org===state.org)).length;
+    el.append(h("button",{class:"stat","aria-pressed":String(state.status===s),onclick:()=>{state.status = state.status===s?"all":s; render();}},
+      h("b",{text:String(n)}), h("span",{text:STATUS[s]})));
+  }
+  el.append(h("button",{class:"stat",onclick:()=>switchTab("retention")},
+    h("b",{text:String(IDEAS.length)}), h("span",{text:"Retention ideas"})));
+}
+function renderFilters(){
+  const el = document.getElementById("filters"); el.replaceChildren();
+  const chip = (label, key, val) => h("button",{class:"chip","aria-pressed":String(state[key]===val),onclick:()=>{state[key]=val; render();}, text:label});
+  el.append(chip("All","org","all"), chip("Megapixels","org","MP"), chip("HFA","org","HFA"), h("span",{class:"sep"}),
+    chip("Any status","status","all"), ...Object.keys(STATUS).filter(s=>s!=="idea").map(s=>chip(STATUS[s],"status",s)));
+  const input = h("input",{class:"search",id:"search",type:"search",placeholder:"Search projects",value:state.q,"aria-label":"Search projects"});
+  input.addEventListener("input", e=>{ state.q=e.target.value; renderGrid(); });
+  el.append(input);
+}
+function renderGrid(){
+  const q = state.q.trim().toLowerCase();
+  const list = projects.filter(p => (state.org==="all"||p.org===state.org) && (state.status==="all"||p.status===state.status)
+    && (!q || (p.name+" "+p.desc+" "+p.kind).toLowerCase().includes(q)));
+  const order = {live:0,progress:1,backburner:2,idea:3};
+  list.sort((a,b)=>order[a.status]-order[b.status]);
+  const grid = document.getElementById("grid");
+  grid.replaceChildren(...(list.length ? list.map(projectCard) : [h("p",{class:"empty",text:"Nothing matches those filters."})]));
+}
+function renderRetention(){
+  const t5 = document.getElementById("top5"); t5.replaceChildren();
+  for (const r of [1,2,3,4,5]){
+    t5.append(h("button",{onclick:()=>{const c=document.getElementById("idea-"+TOP5_TARGET[r]); c.scrollIntoView({behavior:"smooth",block:"center"}); c.classList.remove("flash"); void c.offsetWidth; c.classList.add("flash");}},
+      h("span",{class:"rank",text:String(r)}), h("span",{class:"t",text:TOP5_LABELS[r]}), h("span",{class:"s",text:"See the card"})));
+  }
+  const wrap = document.getElementById("stages"); wrap.replaceChildren();
+  STAGES.forEach((s,i)=>{
+    const ideas = IDEAS.filter(x=>x.stage===s.id).sort((a,b)=>(a.top||9)-(b.top||9));
+    wrap.append(h("section",{class:"stage"},
+      h("div",{class:"stage-head"}, h("span",{class:"stage-num",text:"STAGE "+(i+1)}), h("h2",{text:s.name}), h("span",{class:"when",text:s.when})),
+      h("div",{class:"idea-grid"}, ideas.map(x=>h("article",{class:"card idea"+(x.top?" top":""),id:"idea-"+x.n},
+        h("div",{class:"card-head"}, h("h3",{text:x.name}), x.top ? h("span",{class:"badge-top",text:"Top "+x.top}) : (x.n===21 ? h("span",{class:"tag st-idea",text:"Start here"}) : null)),
+        h("p",{class:"desc",text:x.desc}),
+        x.path ? h("div",{class:"path"}, h("b",{text:"Draft tracks from the current catalog"}), x.path.map(p=>h("span",{text:p}))) : null,
+        block("First steps", x.next),
+        h("div",{class:"foot"}, h("span",{text:"Owner · TBD"}), h("span",{class:"tag st-idea",text:"Idea"}))
+      )))
+    ));
+  });
+}
+function switchTab(name){
+  for (const b of document.querySelectorAll(".tabs button")) b.setAttribute("aria-selected", String(b.dataset.tab===name));
+  document.getElementById("view-projects").hidden = name!=="projects";
+  document.getElementById("view-retention").hidden = name!=="retention";
+  try { localStorage.setItem("tab", name); } catch(e){}
+  window.scrollTo({top:0});
+}
+function render(){ renderStats(); renderFilters(); renderGrid(); }
+for (const b of document.querySelectorAll(".tabs button")) b.addEventListener("click", ()=>switchTab(b.dataset.tab));
+document.getElementById("footnote").textContent = "Last updated " + LAST_UPDATED + ". Built and maintained by Amanda for Megapixels School of the Arts and Homeschool Funding Accelerator.";
+render(); renderRetention();
+let startTab = location.hash==="#retention" ? "retention" : null;
+try { startTab = startTab || localStorage.getItem("tab"); } catch(e){}
+if (startTab==="retention") switchTab("retention");
+</script>
+
+</body></html>
